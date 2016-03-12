@@ -82,7 +82,6 @@ words = [ w
           for t in status_texts 
               for w in t.split() ]
               
-from pyspark.sql import Row
 retweets = [Row(count=status['retweet_count'], 
              screen_name=status['retweeted_status']['user']['screen_name'],
              text=status['text'],
@@ -91,6 +90,7 @@ retweets = [Row(count=status['retweet_count'],
                 if status.has_key('retweeted_status')
            ]
 df = sc.parallelize(retweets).toDF()
+df = df.sort("count", ascending=False)
 df.show()
 
 
