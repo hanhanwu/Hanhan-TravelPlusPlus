@@ -12,6 +12,7 @@ from pyspark.sql import Row
 from pyspark.sql.functions import udf, concat_ws
 from pyspark.sql.types import *
 from urllib2 import urlopen
+import re
 
 
 Twitter_CONSUMER_KEY = "[your twitter customer key]"
@@ -68,30 +69,17 @@ for _ in range(5):
     search_results = twitter_api.search.tweets(**kwargs)
     statuses += search_results['statuses']
     
-status_texts = [ status['text'] 
-                 for status in statuses ]
-screen_names = [ user_mention['screen_name'] 
-                 for status in statuses
-                     for user_mention in status['entities']['user_mentions'] ]
-hashtags = [ hashtag['text'] 
-             for status in statuses
-                 for hashtag in status['entities']['hashtags'] ]
-
-# Compute a collection of all words from all tweets
-words = [ w 
-          for t in status_texts 
-              for w in t.split() ]
               
 retweets = [Row(count=status['retweet_count'], 
              screen_name=status['retweeted_status']['user']['screen_name'],
-             text=status['text'],
+             text=re.split("RT\s@[\w\W]+:\s",status['text'])[1],
              location=status['user']['location']) 
             for status in statuses 
                 if status.has_key('retweeted_status')
            ]
 df = sc.parallelize(retweets).toDF()
 df = df.sort("count", ascending=False)
-df.show()
+df.show(truncate=False)
 
 
 # Part 3: hot tourism spots
