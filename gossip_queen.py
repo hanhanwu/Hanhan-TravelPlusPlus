@@ -130,6 +130,7 @@ for pid in pids:
     lat = t[0][0].get('latitude')
     lng = t[0][0].get('longitude')
     rs.append(Row(id=pid, latitude=lat, longitude=lng, post_date=today))
+print len(rs)
     
 flickr_location_df = sc.parallelize(rs).toDF().cache()
 flickr_location_df.show()
