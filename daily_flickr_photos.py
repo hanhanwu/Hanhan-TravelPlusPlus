@@ -63,7 +63,8 @@ for pid in pids:
     lat = t[0][0].get('latitude')
     lng = t[0][0].get('longitude')
     rs.append(Row(id=pid, latitude=lat, longitude=lng, post_date=today))
-    
+print len(rs)    
+
 # cell 3, this will save time, since Flickr API is slow, generate df in another cell no need to call the API again
 flickr_location_df = sc.parallelize(rs).toDF().cache()
 flickr_location_df.show()
