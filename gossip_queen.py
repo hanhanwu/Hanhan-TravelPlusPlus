@@ -99,15 +99,15 @@ retweets_rows = [Row(count=retweet[0],
              location=retweet[4]) 
             for retweet in retweets]
 
-ww_df = sc.parallelize(retweets_rows).toDF()
-ww_df.groupBy('text').agg({'count': 'sum'}).alias('count')
-ww_df = ww_df.sort("count", ascending=False)
+real_time_df = sc.parallelize(retweets_rows).toDF()
+real_time_df.groupBy('text').agg({'count': 'sum'}).alias('count')
+real_time_df = real_time_df.sort("count", ascending=False)
 
 today = date.today()
 today_str = str(today.year)+'_'+str(today.month)+'_'+str(today.day)
 print today_str
-filename = '/FileStore/ww_trends/ww_trends_'+today_str+'.csv'
-ww_df.coalesce(1).write.format("com.databricks.spark.csv").save(filename)
+filename = '/FileStore/real_time_trends/real_time_trends_'+today_str+'.csv'
+real_time_df.coalesce(1).write.format("com.databricks.spark.csv").save(filename)
 
 
 # Part 3: hot tourism spots
