@@ -93,21 +93,27 @@ def clean_tweet(status):
 retweets = [clean_tweet(status) for status in statuses if status.has_key('retweeted_status')]
 
 retweets_rows = [Row(count=retweet[0], 
-             tweet_title=retweet[1],
+             title=retweet[1],
              text=retweet[2],
              urls=retweet[3],
              location=retweet[4]) 
             for retweet in retweets]
 
 real_time_df = sc.parallelize(retweets_rows).toDF()
-real_time_df.groupBy('text').agg({'count': 'sum'}).alias('count')
-real_time_df = real_time_df.sort("count", ascending=False)
+real_time_df.registerTempTable('RealTimeTweets')
+processed_real_time_df = sqlContext.sql("""
+    SELECT sum(count) as count, first(title) as title, 
+    first(text) as text, first(location) as location, first(urls) as urls FROM
+    RealTimeTweets
+    GROUP BY text
+    ORDER BY count desc
+    """)
 
 today = date.today()
 today_str = str(today.year)+'_'+str(today.month)+'_'+str(today.day)
 print today_str
 filename = '/FileStore/real_time_trends/real_time_trends_'+today_str+'.csv'
-real_time_df.coalesce(1).write.format("com.databricks.spark.csv").save(filename)
+processed_real_time_df.coalesce(1).write.format("com.databricks.spark.csv").save(filename)
 
 
 # Part 3: hot tourism spots
