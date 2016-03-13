@@ -70,16 +70,44 @@ for _ in range(5):
     statuses += search_results['statuses']
     
               
-retweets = [Row(count=status['retweet_count'], 
-             screen_name=status['retweeted_status']['user']['screen_name'],
-             text=re.split("RT\s@[\w\W]+:\s",status['text'])[1],
-             location=status['user']['location']) 
-            for status in statuses 
-                if status.has_key('retweeted_status')
-           ]
-df = sc.parallelize(retweets).toDF()
-df = df.sort("count", ascending=False)
-df.show(truncate=False)
+def clean_tweet(status):
+  count=int(status['retweet_count'])
+  screen_name=status['retweeted_status']['user']['screen_name']
+  cleaned_text = re.split("RT\s@[\w\W]+:\s",status['text'])[1]
+  first_idx = cleaned_text.find('https://')
+  if first_idx != -1:
+    if first_idx == 0:
+      tweet_text = screen_name
+    else:
+      tweet_text = cleaned_text[0:first_idx]
+    urls = ''
+    us = [u for u in cleaned_text.split() if u.startswith('https://')]
+    for u in us:
+      urls+=u+',  '
+  else:
+    tweet_text = cleaned_text
+    urls = ''
+  location=status['user']['location']
+  return (count, screen_name, tweet_text, urls, location)
+  
+retweets = [clean_tweet(status) for status in statuses if status.has_key('retweeted_status')]
+
+retweets_rows = [Row(count=retweet[0], 
+             tweet_title=retweet[1],
+             text=retweet[2],
+             urls=retweet[3],
+             location=retweet[4]) 
+            for retweet in retweets]
+
+ww_df = sc.parallelize(retweets_rows).toDF()
+ww_df.groupBy('text').agg({'count': 'sum'}).alias('count')
+ww_df = ww_df.sort("count", ascending=False)
+
+today = date.today()
+today_str = str(today.year)+'_'+str(today.month)+'_'+str(today.day)
+print today_str
+filename = '/FileStore/ww_trends/ww_trends_'+today_str+'.csv'
+ww_df.coalesce(1).write.format("com.databricks.spark.csv").save(filename)
 
 
 # Part 3: hot tourism spots
