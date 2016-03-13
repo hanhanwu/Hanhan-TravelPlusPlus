@@ -19,7 +19,11 @@ Note: I am using DataFame and udf for the 2nd and the 3rd parts of Gossip Queen,
 And in many cases, it is really good to run code in different cells, since it stores some previous generated output which will be used later. You don't need to re-run previous code again, which saves much time. But if you have dettached your Cluster, you have to re-run the code from the begining. And click "Run All" is not a good choice since Spark will run all the cells together in stead of running from the top to the bottom.
 
 
-* Create tables in Spark Cluster
+* Create tables in Spark Cluster - daily_flickr_photos.py
   * Since Flickr API is slow in searching photos, and daily returns may have very few photos with latitude and longitude info. In case on the presebtation day, there is not too much data, I am saving daily data into tables.
   * The code convert the generated DataFrame into .csv and save it on Spark Cluster. Then just create Table by choosing "DBFS" as the data source, choosing the data from Spark FileStore folder, changing table schema, table name, column names if needed.
   * So far, I am using Spark beta environment, ti shows cannot insert new data into an existing table, so I have to create daily table.
+
+* Merger tables on Spark cluster - merge_spark_tables.sql
+ * The tables generated from .csv file in the previous step are called csv tables.
+ * So far, Spark only supports INSERT OVERWRITE for csv tables, therefore the code is working on merging tables into 1.
