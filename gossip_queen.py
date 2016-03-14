@@ -186,20 +186,46 @@ def get_level1_locations(lat_lng):
             city = c['long_name']
           if "administrative_area_level_1" in c['types']:
             state = c['long_name']
-      return (city, state, country)
-    return [None]
+      location = city+', '+state+', '+country
+      return location
+    return ''
     
-get_level1_locations_udf = udf(lambda lat_lng: get_level1_locations(lat_lng), ArrayType(StringType()))
-new_df1 = flickr_location_df.withColumn("level1_locations", get_level1_locations_udf(concat_ws(',', flickr_location_df.latitude, flickr_location_df.longitude).alias('lat_lng'))).cache()
+get_level1_locations_udf = udf(lambda lat_lng: get_level1_locations(lat_lng), StringType())
+new_df1 = flickr_location_df.withColumn("level1_locations", 
+get_level1_locations_udf(concat_ws(',', flickr_location_df.latitude, 
+flickr_location_df.longitude).alias('lat_lng'))).cache()
+
 new_df1.show(truncate=False)
+
+new_df1.registerTempTable('HotSpots_level1')
+new_df2 = sqlContext.sql("""
+    SELECT count(id) as count, first(post_date) as post_date, 
+    latitude, longitude,
+    first(level1_locations) as level_1
+    FROM
+    HotSpots_level1
+    GROUP BY latitude, longitude
+    ORDER BY count desc
+    """).cache()
+    
+new_df2.show()
 
 
 def get_level2_locations(lat_lng):
   elems = lat_lng.split(',')
   search_results = Instagram_api.location_search(q, count, float(elems[0]), float(elems[1]))
   locations = Set([los.name.split(',')[0] for los in search_results])
-  return list(locations)
+  hot_spots = ''
+  for spot in locations:
+    hot_spots += spot+', '
+  return hot_spots
 
-get_level2_locations_udf = udf(lambda lat_lng: get_level2_locations(lat_lng), ArrayType(StringType()))
-new_df2 = new_df1.withColumn("level2_locations", get_level2_locations_udf(concat_ws(',', new_df1.latitude, new_df1.longitude).alias('lat_lng'))).cache()
-new_df2.show(truncate=False)
+get_level2_locations_udf = udf(lambda lat_lng: get_level2_locations(lat_lng), StringType())
+new_df3 = new_df2.withColumn("level2_locations", 
+get_level2_locations_udf(concat_ws(',', new_df2.latitude, 
+new_df2.longitude).alias('lat_lng'))).cache()
+
+new_df3.show()
+
+filename = '/FileStore/current_hot_spots/hot_spots_'+today_str+'.csv'
+new_df3.coalesce(1).write.format("com.databricks.spark.csv").save(filename)
