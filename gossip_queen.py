@@ -178,17 +178,20 @@ def get_level1_locations(lat_lng):
     j = json.loads(v)
     if len(j['results'])>0:
       components = j['results'][0]['address_components']
-      country = town = city = None
+      location_list=[]
       for c in components:
-          if "country" in c['types']:
-            country = c['long_name']
           if "locality" in c['types']:
-            city = c['long_name']
+            location_list.append(c['long_name'])
           if "administrative_area_level_1" in c['types']:
-            state = c['long_name']
-      location = city+', '+state+', '+country
+            location_list.append(c['long_name'])
+          if "country" in c['types']:
+            location_list.append(c['long_name'])
+      location = ', '.join(filter(None, location_list))
       return location
     return ''
+    
+get_level1_locations_udf = udf(lambda lat_lng: get_level1_locations(lat_lng), StringType())
+new_df1 = flickr_location_df.withColumn("level1_locations", get_level1_locations_udf(concat_ws(',', flickr_location_df.latitude, flickr_location_df.longitude).alias('lat_lng'))).cache()
     
 get_level1_locations_udf = udf(lambda lat_lng: get_level1_locations(lat_lng), StringType())
 new_df1 = flickr_location_df.withColumn("level1_locations", 
