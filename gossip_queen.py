@@ -112,8 +112,8 @@ processed_real_time_df = sqlContext.sql("""
 today = date.today()
 today_str = str(today.year)+'_'+str(today.month)+'_'+str(today.day)
 print today_str
-filename = '/FileStore/real_time_trends/real_time_trends_'+today_str+'.csv'
-processed_real_time_df.coalesce(1).write.format("com.databricks.spark.csv").save(filename)
+filename = '/FileStore/real_time_trends/real_time_trends_'+today_str
+processed_real_time_df.coalesce(1).write.parquet(filename)
 
 
 # Part 3: hot tourism spots
@@ -230,5 +230,5 @@ new_df2.longitude).alias('lat_lng'))).cache()
 
 new_df3.show()
 
-filename = '/FileStore/current_hot_spots/hot_spots_'+today_str+'.csv'
-new_df3.coalesce(1).write.format("com.databricks.spark.csv").save(filename)
+filename = '/FileStore/current_hot_spots/hot_spots_'+today_str
+new_df3.coalesce(1).write.parquet(filename)
