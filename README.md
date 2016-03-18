@@ -9,7 +9,7 @@ Using machine learning, data mining, data visualization techniques
 * Main Features
   * Gossip Queen - Real Time Hottest Trends world wide
     1. World Wide Hottest Trends in different countries - The hot trends in this part may not be real time, the origional data generated from Twitter trends API, I extracted the hashtag and the url from the data. The trends got here may not be real time but still the newest within 2 days! But you may notice that, here I am using limited amount of countries to extract the data and I am not using Spark RDD or DataFrame to do parallized requests. Because of the limitation of Twitter trends api. If I am using parallized requests or do more country trend request, Trwitter will send 429 HTTP error which means too many requests. But by doing the intersection of world-wide trends with each country trends, the trends showing here are newest popular country trends world-wide! This is the just the appetizer I am showing :)
-    2. Real Time Trends - The data source is twitter search API with "travel" as the search key words. I have cleaned the data. The tweets are sorted by retweet count in descending order. Origionally, I was using Python pretty table, but it bacame pretty slow when there were more tweets to deal with, especially when there is sorting. However, using Spark DataFrame became much faster, it will easier to do sorting, or other sql query in the future.
+    2. Real Time Trends - The data source is twitter search API with "travel" as the search key words. I have cleaned the data. The tweets are sorted by retweet count in descending order. Origionally, I was using Python pretty table, but it bacame pretty slow when there were more tweets to deal with, especially when there is sorting. However, using Spark DataFrame became much faster, it will easier to do sorting, or other Spark sql query in the future.
 
       Sometimes, DataFrame show() cannot really show the generated df on Spark Clsuter UI, so here I have to save the output as .csv file. When using these .csv file to create csv tables, foreign languages (not English) will create error in Spark sql queries. There is a way to use filter out all the foreign languages using PyEnchant, but it need enchant C library installed in the OS, this is not possible for me to do in Spark Cluster, so even though I will save the data in Spark Tables, I will still use df to do the queries.
       
@@ -31,3 +31,8 @@ And in many cases, it is really good to run code in different cells, since it st
 * Merger tables on Spark cluster - merge_spark_tables.sql
  * The tables generated from .csv file in the previous step are called csv tables.
  * So far, Spark only supports INSERT OVERWRITE for csv tables, therefore the code is working on merging tables into 1.
+
+* Generate table through parquet file - parquet_to_table.sql
+ * Convert DataFrame to parquet will avoid errors that may be created in .csv.
+ * It is easier to write the code to create tables using parquet.
+ * Parquet tables cannot recognize all the data types right, you may need to define the schema in the DataFrame is necessary.
