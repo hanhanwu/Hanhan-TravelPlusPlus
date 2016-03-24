@@ -11,7 +11,7 @@ import praw
 from nltk.stem.porter import *
 import re
 
-user_agent = ("travel++ 1.0")
+user_agent = ("[your user agent]")
 
 r = praw.Reddit(user_agent = user_agent)
 subreddit_lst = ["backpacking", "travel", "shoestring", "travelers"]
