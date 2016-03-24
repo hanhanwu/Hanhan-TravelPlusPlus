@@ -31,8 +31,8 @@ And in many cases, it is really good to run code in different cells, since it st
   * This feature will answer user traveling questions automatically.
   * It will firstly find relative posts from stored Reddit posts and recommend to the user - Part1
   * If Reddit data cannot provide results that are strong enough, it will search wiki links to provide references - Part2
-  * store_reddit_data.py - get data from Reddit travel subreddits, store them into different tables. It took me longer time to design the database structure, thinking which database is better. In this case, I choose Spark Table since using Spark Notebook on its cluster still efficient and writing Saprk sql query is convenient. Just need to think how to use DataFrame, RDD, Sparl Tables and how can I apply my later algorithms on these tables.
-  * Find matched Reddit posts based on user query - match_reddit_posts.py
+  * DrQ_store_reddit_data.py - get data from Reddit travel subreddits, store them into different tables. It took me longer time to design the database structure, thinking which database is better. In this case, I choose Spark Table since using Spark Notebook on its cluster still efficient and writing Saprk sql query is convenient. Just need to think how to use DataFrame, RDD, Sparl Tables and how can I apply my later algorithms on these tables.
+  * Find matched Reddit posts based on user query - DrQ_match_reddit_posts.py
    1. 3 levels matchong methods.
    2. The Reddit data comes from those stored tables 
    3. Level 1 Method: find matched posts using Levenshtein Distance to compare the query and the Reddit post title. This method works better when the length of user query and the length of reddit post are similar.
