@@ -217,3 +217,17 @@ dist_df3 = dist_df2.orderBy(dist_df2.rescaled_dist_score.desc()).cache()
 dist_df3.show(n=5)
 dist_df3.select(dist_df3.url).show(n=5, truncate=False)
 
+# Approach 3: tokens frequency
+sql_query5 = "select post_id, count(post_id) as tokens_count from RowsTable group by post_id"
+
+tc_df1 = sqlContext.sql(sql_query5).cache()
+
+mins3 = tc_df1.agg({"tokens_count": "min"}).collect()[0][0]
+maxs3 = tc_df1.agg({"tokens_count": "max"}).collect()[0][0]
+
+udf3 = udf(lambda s: rescale_score(s, mins3, maxs3))
+tc_df2 = tc_df1.withColumn("rescaled_tokens_count", udf3(tc_df1.tokens_count)).withColumn("url", add_prefix_udf(tc_df1.post_id)).cache()
+tc_df3 = tc_df2.orderBy(tc_df2.rescaled_tokens_count.desc()).cache()
+
+tc_df3.show(n=5)
+tc_df3.select(tc_df3.url).show(n=5, truncate=False)
