@@ -36,8 +36,15 @@ And in many cases, it is really good to run code in different cells, since it st
    1. 3 levels matchong methods.
    2. The Reddit data comes from those stored tables 
    3. Level 1 Method: find matched posts using Levenshtein Distance to compare the query and the Reddit post title. This method works better when the length of user query and the length of reddit post are similar.
-   4. Level 2 Method: get NN entities from usey query and find reddit posts that share more same entities. 
+   4. Level 2 Method: get NN entities from usey query and find reddit posts that share more same entities. This method works well when the query has more sentences so that NLTK entity extraction will be more accurate.
    5. Level 3 Method: use tokens from user query and reddit posts, calculate scores based on token frequency, token location, token distances. In the code, using Spark DataFrame udf has made the code simpler and more efficient.
+   6. Accurate Output sample: 
+   
+     User Query = "Advice for Europe trip?"
+     
+     Top 5 returned Reddit posts: (https://www.reddit.com/r/travel/4b46hd, https://www.reddit.com/r/travel/4azubc, https://www.reddit.com/r/travel/48uu2h, https://www.reddit.com/r/travel/4arqzu, https://www.reddit.com/r/travel/2ltqv3)
+   
+  *  Level 3 method is always the most accurate one, especially after adding weights to its 3 approaches. Check the highest ranking in the output, if it doesn't pass the threshold, use DrQ_search_engine.py to search for wiki references.
 
 
 * Create tables in Spark Cluster - daily_flickr_photos.py
