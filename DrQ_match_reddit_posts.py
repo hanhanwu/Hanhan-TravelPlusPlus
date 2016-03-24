@@ -231,3 +231,22 @@ tc_df3 = tc_df2.orderBy(tc_df2.rescaled_tokens_count.desc()).cache()
 
 tc_df3.show(n=5)
 tc_df3.select(tc_df3.url).show(n=5, truncate=False)
+
+
+# Cell 7: add weights to each score calculation method and use them together
+cond1 = [loc_df3.post_id == dist_df3.post_id]
+tmp_df1 = loc_df3.join(dist_df3, cond1).select(loc_df3.post_id, loc_df3.url, loc_df3.rescaled_location_score, dist_df3.rescaled_dist_score)
+
+cond2 = [tmp_df1.post_id == tc_df3.post_id]
+tmp_df2 = tmp_df1.join(tc_df3, cond2).select(tmp_df1.post_id, tmp_df1.url, tmp_df1.rescaled_location_score, tmp_df1.rescaled_dist_score, tc_df3.rescaled_tokens_count)
+
+tmp_df2.show(n=5)
+
+w1 = 4
+w2 = 3.5
+w3 = 1
+tmp_df3 = tmp_df2.select(tmp_df2.post_id, tmp_df2.url, (tmp_df2.rescaled_location_score*w1+tmp_df2.rescaled_dist_score*w2+tmp_df2.rescaled_tokens_count*w1).alias("ranking"))
+tmp_df3.show(n=5)
+
+result_df = tmp_df3.sort(tmp_df3.ranking.desc())
+result_df.show(n=5, truncate=False)
