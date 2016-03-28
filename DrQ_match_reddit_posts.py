@@ -1,8 +1,6 @@
 '''
 Once a user has given a search query, I am using NLP techniques and 3 level methods to find close Reddit posts 
-    1. Level 1: Using 
 '''
-
 
 # cell 1: allow foreign languages in the query
 import sys  
@@ -245,7 +243,7 @@ tmp_df2.show(n=5)
 w1 = 4
 w2 = 3.5
 w3 = 1
-tmp_df3 = tmp_df2.select(tmp_df2.post_id, tmp_df2.url, (tmp_df2.rescaled_location_score*w1+tmp_df2.rescaled_dist_score*w2+tmp_df2.rescaled_tokens_count*w1).alias("ranking"))
+tmp_df3 = tmp_df2.select(tmp_df2.post_id, tmp_df2.url, (tmp_df2.rescaled_location_score*w1+tmp_df2.rescaled_dist_score*w2+tmp_df2.rescaled_tokens_count*w3).alias("ranking"))
 tmp_df3.show(n=5)
 
 result_df = tmp_df3.sort(tmp_df3.ranking.desc())
