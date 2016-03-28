@@ -1,5 +1,11 @@
 # cell 1
 import nltk
+import sys  
+
+# allow foreign languages in the posts
+reload(sys)  
+sys.setdefaultencoding('utf8')
+
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('maxent_treebank_pos_tagger')
