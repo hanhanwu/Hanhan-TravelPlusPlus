@@ -5,7 +5,6 @@ import flickrapi
 from datetime import date
 from instagram.client import InstagramAPI
 from nltk.stem.porter import *
-from sets import Set
 import operator
 import flickrapi
 from pyspark.sql import Row
@@ -224,7 +223,7 @@ new_df2.show()
 def get_level2_locations(lat_lng):
   elems = lat_lng.split(',')
   search_results = Instagram_api.location_search(q, count, float(elems[0]), float(elems[1]))
-  locations = Set([los.name.split(',')[0] for los in search_results])
+  locations = set([los.name.split(',')[0] for los in search_results])
   hot_spots = ''
   for spot in locations:
     hot_spots += spot+', '
