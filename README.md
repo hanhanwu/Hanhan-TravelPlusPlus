@@ -37,20 +37,30 @@ And in many cases, it is really good to run code in different cells, since it st
    2. The Reddit data comes from those stored tables 
    3. Level 1 Method: find matched posts using Levenshtein Distance to compare the query and the Reddit post title. This method works better when the length of user query and the length of reddit post are similar.
    4. Level 2 Method: get NN entities from usey query and find reddit posts that share more same entities. This method works well when the query has more sentences so that NLTK entity extraction will be more accurate.
-   5. Level 3 Method: use tokens from user query and reddit posts, calculate scores based on token frequency, token location, token distances. In the code, using Spark DataFrame udf has made the code simpler and more efficient.
+   5. Level 3 Method: use tokens from user query and reddit posts, calculate scores based on token frequency, token location, token distances, and combined all 3 calculating approaches by setting weights to them.
    6. Accurate Output sample: 
    
      User Query = "Advice for Europe trip?"
      
-     Top 5 returned Reddit posts: (https://www.reddit.com/r/travel/4b46hd, https://www.reddit.com/r/travel/4azubc, https://www.reddit.com/r/travel/48uu2h, https://www.reddit.com/r/travel/4arqzu, https://www.reddit.com/r/travel/2ltqv3)
+     Top 5 returned Reddit posts: (https://www.reddit.com/r/travel/4b46hd, https://www.reddit.com/r/travel/4arqzu, https://www.reddit.com/r/travel/48uu2h, https://www.reddit.com/r/travel/4atds4, https://www.reddit.com/r/travel/2ltqv3)
    
   *  Level 3 method is always the most accurate one, especially after adding weights to its 3 approaches. Check the highest ranking in the output, if it doesn't pass the threshold, use DrQ_search_engine.py to search for wiki references.
 
+  *  DrQ_search_engine.py
+   1. Use BFS to crawl the wiki travling related pages.
+   2. Spark cluster became terribly slow when the dataframe is large, so I am using GraphFrame pagerank score to choose the top 200 links first.
+   3. Then do score calculations using the chosen 200 links. The score calculation methods include: word location, word distance, word frequency and combine all of them by setting weight for each. 
+   4. One thing pretty interesting is that, in my DrQ_match_reddit_posts.py, word frequency plays the least important role while word location is more important. But in DrQ_search_engine.py, word frequency often create more accurate results while word location play the least important role. So the weight setting in these 2 features is different.
 
-* Create tables in Spark Cluster - daily_flickr_photos.py
+
+* Create tables in Spark Cluster - daily_flickr_photos_csv.py
   * Since Flickr API is slow in searching photos, and daily returns may have very few photos with latitude and longitude info. In case on the presebtation day, there is not too much data, I am saving daily data into tables.
   * The code convert the generated DataFrame into .csv and save it on Spark Cluster. Then just create Table by choosing "DBFS" as the data source, choosing the data from Spark FileStore folder, changing table schema, table name, column names if needed.
-  * So far, I am using Spark beta environment, ti shows cannot insert new data into an existing table, so I have to create daily table.
+  * So far, I am using Spark beta environment, to shows cannot insert new data into an existing table, so I have to create daily table.
+
+* daily_flickr_photos_parquet.py
+ * This is simplfied version of daily_flickr_photos_csv.py, since using paquet, no need to manually creat table.
+ * Spark cluster still only support insert overwrite, so far.
 
 * Merger tables on Spark cluster - merge_spark_tables.sql
  * The tables generated from .csv file in the previous step are called csv tables.
