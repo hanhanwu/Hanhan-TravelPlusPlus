@@ -45,7 +45,8 @@ Using machine learning, data mining, data visualization techniques
 
 
 * daily_flickr_photos_csv.py - Create csv tables in Spark Cluster
-* daily_flickr_photos_parquet.py - Create parquet tables in Spark Cluster
+* daily_flickr_photos_parquet.py - Create parquet tables in Spark Cluster, added bar chart to show daily photo posting trend
+* dataframe_visualization.png - sample bar chart which shows daily photo posting trend, using Spark Clsuter is very convenient to create simple chart like this. Just write Saprk sql, then click the chart button.
 * merge_spark_tables.sql - Merger tables on Spark cluster
 * parquet_to_table.sql - Generate table through parquet file
 * DetailedReadMe.txt - Detailed technical notes
