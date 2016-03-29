@@ -48,3 +48,4 @@ Using machine learning, data mining, data visualization techniques
 * daily_flickr_photos_parquet.py - Create parquet tables in Spark Cluster
 * merge_spark_tables.sql - Merger tables on Spark cluster
 * parquet_to_table.sql - Generate table through parquet file
+* DetailedReadMe.txt - Detailed technical notes
