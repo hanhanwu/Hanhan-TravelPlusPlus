@@ -29,7 +29,7 @@ print tags
 
 import flickrapi
 import json
-from datetime import date
+from datetime import date, datetime
 from pyspark.sql import Row
 
 def get_location(pid):
@@ -44,6 +44,8 @@ flickr_API_SECRET = u'[your API secret]'
 flickr = flickrapi.FlickrAPI(flickr_API_KEY, flickr_API_SECRET)
 
 today = date.today()
+weekday = datetime.now().strftime("%A")
+pd = str(today)+" ("+weekday+")"
 photo_list= flickr.photos_search(tags=tags, format='json')
 photo_list_json = json.loads(photo_list)
 pids = [e['id'] for e in photo_list_json['photos']['photo']]
@@ -54,7 +56,7 @@ for pid in pids:
   if t != None:
     lat = t[0][0].get('latitude')
     lng = t[0][0].get('longitude')
-    rs.append(Row(id=pid, latitude=lat, longitude=lng, post_date=today))
+    rs.append(Row(id=pid, latitude=lat, longitude=lng, post_date=pd))
     
 print len(rs)
 
@@ -98,3 +100,8 @@ order by post_date desc
 %sql
 drop table daily_table;
 show tables;
+
+
+%sql -- used for dataframe visualization
+select count(id) as count, post_date from all_flickr_photo
+group by post_date
