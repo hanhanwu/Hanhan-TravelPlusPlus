@@ -102,6 +102,7 @@ drop table daily_table;
 show tables;
 
 
-%sql -- used for dataframe visualization
+%sql
 select count(id) as count, post_date from all_flickr_photo
 group by post_date
+order by post_date
