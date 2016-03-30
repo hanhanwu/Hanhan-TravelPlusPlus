@@ -113,6 +113,8 @@ And in many cases, it is really good to run code in different cells, since it st
 * daily_flickr_photos_parquet.py
  * This is simplfied version of daily_flickr_photos_csv.py, since using paquet, no need to manually creat table.
  * Spark cluster still only support insert overwrite, so far.
+ * In this file, I have added visualization part. It is quite easy to generated simple charts from dataframe on Spark Cluster. In this case, I am using a bar chart to show the daily photo posts trend.
+ * In the Spark sql query, I tried "order by post_date" and "sort by post_date" after a group by clause, and they are really different. "sort by" will sort each group while "order by" will work for the whole. In this case, I need to sort all the post_date together, using "order by" gives me the right results.
 
 * Merger tables on Spark cluster - merge_spark_tables.sql
  * The tables generated from .csv file in the previous step are called csv tables.
