@@ -56,7 +56,7 @@ count = 200
 search_results = twitter_api.search.tweets(q=q, count=count)
 statuses = search_results['statuses']
 
-for _ in range(5):
+for i in range(5):
     print "Length of statuses", len(statuses)
     try:
         next_results = search_results['search_metadata']['next_results']
