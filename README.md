@@ -1,19 +1,41 @@
 # Hanhan-TravelPlusPlus
 Using machine learning, data mining, data visualization techniques
 
-* Tools - Spark Cluster (Databricks Cloud), Python, Spark sql
+* Platform - Spark Cluster (Databricks Cloud)
+* Database - Spark Cluster Tables
+* Coding Language - Python, Spark Sql
+* Data Visualization - Tableau, d3, Spark Cluster df chart
+
 * travel++ slides.pdf - Project Proposal Presentation Slides
+* poster.pdf - Travel++ final poster
 
 
-* Main Features
-  * Gossip Queen - Real time world wide trends, hot tourism spots recommendation based on travelers movements
-  * Dr.Q - Automatic answers for traveling questions
-  * May Attentive - Personalized Visualized Map
+Main Features
+
+
+* Gossip Queen
+  1. World Wide Trends
+  2. Real Time Hottest Topics
+  3. Current Hottest Tourism Spots based on social media posts
+ 
+* Dr.Q
+  1. Automatic answers traveling related questions using similar Reddit posts
+  2. When Reddit cannot provide strong enough answers, 
+       crawl traveling links from Wiki pages, search for relative references and images to answer the user query
+
+* Map Attentive - https://github.com/shruthi-mohan/travel_plus_plus/tree/master
+  1. Visualized Hotel, Restaurant map recommendation
+  2. Personalized tourist spots, allowing users to choose the style they like on the map
+  3. Weekly updated top tourism spots 
   
+
 * gossip_queen.py
  * part 1 - longer term world popular topics
  * part 2 - real time world popular topics
  * part 3 - recommend current hottest tourism spots based on social media posts
+
+* GQ_real_time_trends_animation.html, GQ_real_time_trends_animation.gif
+ * Using d3 to create daily real time trends animation, mouse over each moving circle, you will see the topics represented by the circle
       
 * Dr.Q
  * DrQ_store_reddit_data.py - store reddit data into tables, easy to do query match
