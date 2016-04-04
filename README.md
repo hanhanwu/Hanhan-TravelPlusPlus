@@ -33,13 +33,14 @@ Main Features
  * part 1 - longer term world popular topics
  * part 2 - real time world popular topics
  * part 3 - recommend current hottest tourism spots based on social media posts
-
+ 
 * GQ_real_time_trends_animation.html, GQ_real_time_trends_animation.gif
  * Using d3 to create daily real time trends animation, mouse over each moving circle, you will see the topics represented by the circle
       
-* Dr.Q
- * DrQ_store_reddit_data.py - store reddit data into tables, easy to do query match
- * DrQ_match_reddit_posts.py
+
+* DrQ_store_reddit_data.py - store reddit data into tables, easy to do query match
+
+* DrQ_match_reddit_posts.py
    1. Level 1 matching method - find matched posts using Levenshtein Distance
    2. Level 2 Method - calculate matching scores using NN entities
    3. Level 3 Method - Calculate scores using words (tokens)
@@ -53,7 +54,10 @@ Main Features
      
      Top 5 returned Reddit posts: (https://www.reddit.com/r/travel/4b46hd, https://www.reddit.com/r/travel/4arqzu, https://www.reddit.com/r/travel/48uu2h, https://www.reddit.com/r/travel/4atds4, https://www.reddit.com/r/travel/2ltqv3)
    
- * DrQ_search_engine.py
+* DrQ_tables_and_relationships.pdf
+  1. This tables and relationships will help you understand better how do I build Dr.Q Reddit Post Match and Search Engine.
+
+* DrQ_search_engine.py
    1. When the user query cannot get a high matching score in DrQ_match_reddit_posts.py, this code will find relative wiki pages, images to the user for reference
    2. Approach 1: Calculate scores based on words locations
    3. Approach 2: Calculate scores based on words distance
