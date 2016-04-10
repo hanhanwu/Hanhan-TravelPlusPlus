@@ -7,7 +7,8 @@ Using machine learning, data mining, data visualization techniques
 * Data Visualization - Tableau, d3, Spark Cluster df chart
 
 * travel++ slides.pdf - Project Proposal Presentation Slides
-* poster.pdf - Travel++ final poster
+* trave++ poster.pdf - Travel++ final poster
+* report.pdf - Travel++ final report
 
 
 Main Features
